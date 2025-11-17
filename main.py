@@ -338,17 +338,21 @@ while True:
             random.choices("abcdefghijklmnopqrstuvwxyz0123456789", k=5)
         )
         timestamp = str(int(time.time() * 1000))
-        sign_resp = session.post(
-            "https://sign.rakuyoudesu.com/",
-            json={
-                "source": "ciappo",
-                "purchaser": purchaser,
-                "purchaserIds": purchaserIds,
-                "ticketTypeId": ticketTypeId,
-                "timestamp": timestamp,
-                "nonce": nonce,
-            },
-        ).json()
+        try:
+            sign_resp = session.post(
+                "https://sign.rakuyoudesu.com/",
+                json={
+                    "source": "ciappo",
+                    "purchaser": purchaser,
+                    "purchaserIds": purchaserIds,
+                    "ticketTypeId": ticketTypeId,
+                    "timestamp": timestamp,
+                    "nonce": nonce,
+                },
+            ).json()
+        except:
+            logger.error("Connect Sign Server Fail! Trying again...")
+            continue
         logger.debug(sign_resp)
         sign = ""
         if sign_resp.get("success", True) is False:
