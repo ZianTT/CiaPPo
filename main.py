@@ -389,7 +389,10 @@ while True:
         logger.debug(resp)
         if resp["isSuccess"]:
             logger.success("Success")
-            order_id = resp.get("result",{}).get("outTradeNo","Unknown")
+            if paymentMethod == "ali":
+                order_id = resp.get("result",{}).get("outTradeNo","Unknown")
+            else:
+                order_id = resp.get("result",{}).get("orderid","Unknown")
             logger.success(f"Order ID: {order_id}")
             session.post(
               f"https://report.rakuyoudesu.com/report",
