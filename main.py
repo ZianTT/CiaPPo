@@ -389,7 +389,7 @@ while True:
         logger.debug(resp)
         if resp["isSuccess"]:
             logger.success("Success")
-            order_id = resp.get("result",{}).get("orderid","Unknown")
+            order_id = resp.get("result",{}).get("outTradeNo","Unknown")
             logger.success(f"Order ID: {order_id}")
             session.post(
               f"https://report.rakuyoudesu.com/report",
