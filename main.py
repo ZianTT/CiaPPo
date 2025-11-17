@@ -23,7 +23,9 @@ else:
         f.write(machine_id)
 
 import questionary
-# import sentry_sdk
+import sentry_sdk
+from sentry_sdk.scrubber import EventScrubber
+from sentry_sdk.integrations.loguru import LoguruIntegration, LoggingLevels
 from loguru import logger
 
 logger.remove()
@@ -54,6 +56,19 @@ else:
     )
 
 VERSION = "v1.1.1"
+
+sentry_loguru = LoguruIntegration(
+    level=LoggingLevels.DEBUG.value, event_level=LoggingLevels.CRITICAL.value
+)
+sentry_sdk.init(
+    dsn="https://5da4096fe7e060710be3acf46b093873@sentry.bakac.top/6",
+    release=VERSION,
+    attach_stacktrace=True,
+    integrations=[sentry_loguru],
+    send_default_pii=True,
+    event_scrubber=EventScrubber(denylist=[], pii_denylist=[]),
+    traces_sample_rate=1.0,
+)
 
 print(r"""
    ______    _             ____     ____        
