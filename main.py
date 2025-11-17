@@ -50,14 +50,17 @@ else:
         + "</cyan> | <level>{level: <8}</level> | <level>{message}</level>",
     )
 
-VERSION = "v1.1.0"
+VERSION = "v1.1.1"
 
-print(r"""   ______    _             ____     ____        
+print(r"""
+   ______    _             ____     ____        
   / ____/   (_)  ____ _   / __ \   / __ \  ____ 
  / /       / /  / __ `/  / /_/ /  / /_/ / / __ \
 / /___    / /  / /_/ /  / ____/  / ____/ / /_/ /
 \____/   /_/   \__,_/  /_/      /_/      \____/ 
-                                                
+
+Still Love You, forever...
+
 CiaPPo～(∠・ω< )⌒☆ """+VERSION)
 
 
