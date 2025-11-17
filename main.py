@@ -191,7 +191,7 @@ else:
 
 
 
-eventMainId = questionary.text("Event Main Id:", default="5456").ask()
+eventMainId = questionary.text("Event Main Id:", default="5476").ask()
 if eventMainId is None:
     logger.error("Event main id is None")
     os._exit(0)
@@ -220,6 +220,9 @@ if ticketTypes.get("isSuccess", True) is False:
     logger.error(f"Login failed, {ticketTypes.get('message','No message')}")
     os._exit(0)
 ticketTypes = ticketTypes["ticketTypeList"]
+if ticketTypes == []:
+    logger.error("Ticket type is empty, may not able to buy.")
+    os._exit(0)
 
 ticketType = questionary.select(
     "Ticket Type:",
