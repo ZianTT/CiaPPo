@@ -8,6 +8,9 @@ import uuid
 import tempfile
 session = requests.Session()
 
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+
 temp_dir = os.path.join(tempfile.gettempdir(), "ciappo")
 if not os.path.exists(temp_dir):
     os.makedirs(temp_dir)
