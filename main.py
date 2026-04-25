@@ -55,7 +55,7 @@ else:
         + "</cyan> | <level>{level: <8}</level> | <level>{message}</level>",
     )
 
-VERSION = "v1.1.1"
+VERSION = "v1.2.0"
 
 sentry_loguru = LoguruIntegration(
     level=LoggingLevels.DEBUG.value, event_level=LoggingLevels.CRITICAL.value
@@ -182,7 +182,7 @@ nickname = user_my["nickname"]
 logger.success(f"Welcome, {nickname} (uid: {uid})")
 
 try:
-    resp = session.post(
+    session.post(
         f"https://report.rakuyoudesu.com/report",
         json={
             "app": "ciappo",
@@ -199,10 +199,10 @@ try:
         timeout=1,
     ).json()
 except:
-    resp = {"debug":None}
+    pass
 
-if resp.get("debug", None):
-    endpoint = resp["debug"]
+if len(sys.argv) > 1:
+    endpoint = sys.argv[1]
     logger.success(f"Using debug endpoint: {endpoint}")
 else:
     endpoint = "www.allcpp.cn"
@@ -310,7 +310,7 @@ paymentMethod = questionary.select(
     "Payment Method:",
     choices=[
         questionary.Choice("1. Alipay", value="ali"),
-        questionary.Choice("2. Wechat Pay", value="wx"),
+        # questionary.Choice("2. Wechat Pay", value="wx"),
     ],
 ).ask()
 
@@ -353,29 +353,9 @@ while True:
             random.choices("abcdefghijklmnopqrstuvwxyz0123456789", k=5)
         )
         timestamp = str(int(time.time() * 1000))
-        try:
-            sign_resp = session.post(
-                "https://sign.rakuyoudesu.com/",
-                json={
-                    "source": "ciappo",
-                    "purchaser": purchaser,
-                    "purchaserIds": purchaserIds,
-                    "ticketTypeId": ticketTypeId,
-                    "timestamp": timestamp,
-                    "nonce": nonce,
-                },
-            ).json()
-        except:
-            logger.error("Connect Sign Server Fail! Trying again...")
-            continue
-        logger.debug(sign_resp)
-        sign = ""
-        if sign_resp.get("success", True) is False:
-            logger.error(f"Sign failed, {sign_resp.get('message','No message')}")
-            time.sleep(ttl)
-            continue
-        else:
-            sign = sign_resp["sign"]
+        sign = hashlib.md5(
+            f"cpp2C0T2y5u0m7a2d9l{timestamp}{nonce}{ticketTypeId}mKSEDLushKSIJSISHMNFEDNSUYQEAVJSfwp"[::-1].upper().encode('utf-8')
+        ).hexdigest()
         pay_headers = headers
         pay_headers["Host"] = "www.allcpp.cn"
         resp = session.post(
