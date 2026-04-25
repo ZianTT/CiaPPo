@@ -20,7 +20,7 @@ jobs:
             build: CiaPPo-Windows.exe
           - os: ubuntu-22.04
             build: CiaPPo-Linux
-          - os: macos-13
+          - os: macos-15-intel
             build: CiaPPo-macOS-Intel
           - os: macos-latest
             build: CiaPPo-macOS-Apple_Silicon
@@ -37,20 +37,31 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: 3.13
+          cache: 'pip'
+          cache-dependency-path: |
+            requirements*.txt
 
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Build Binary
-        run: pyinstaller main.spec
+      - name: Install Cython
+        run: pip install Cython
 
-      # - name: Upload Artifacts
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     path: dist/${{ github.ref_name }}-${{ matrix.build }}
+      - name: Nuitka Build
+        uses: Nuitka/Nuitka-Action@main
+        with:
+          script-name: main.py
+          mode: onefile
+          output-file: ${{ matrix.build }}
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          archive: false
+          path: build/${{ matrix.build }}
 
       - name: Upload Release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: dist/${{ github.ref_name }}-${{ matrix.build }}
+          files: build/${{ matrix.build }}
