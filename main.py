@@ -113,9 +113,12 @@ while True:
     elif loginType.startswith("3"):
         country = questionary.text("Country Code (Default +86):", default="86").ask()
         username = questionary.text("Phone:").ask()
+        sign = hashlib.md5(str(username).encode()+b'sms')
+        logger.debug(f"{phone} {sign}")
         resp = session.get(
-            f"https://user.allcpp.cn/api/code/phone?country={country}&phone={username}&sign={hashlib.md5(str(username).encode()+b'sms')}"
+            f"https://user.allcpp.cn/api/code/phone?country={country}&phone={username}&sign={sign}"
         )
+        logger.debug(resp.text)
         if resp.status_code == 200 and "SUCCESS:提交成功！" in resp.text:
             logger.info("Sent verify code successfully.")
         else:
