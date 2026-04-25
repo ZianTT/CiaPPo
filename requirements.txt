@@ -3,3 +3,4 @@ loguru
 questionary
 pyinstaller
 httpx
+sentry-sdk
