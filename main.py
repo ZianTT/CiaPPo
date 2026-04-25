@@ -6,6 +6,7 @@ import requests
 from ciappo_push import do_push, configure_push_config
 import uuid
 import tempfile
+import hashlib
 session = requests.Session()
 
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
