@@ -54,6 +54,10 @@ jobs:
           mode: onefile
           output-file: ${{ matrix.build }}
 
+      - name: Add executable attr
+        run: chmod +x build/*
+        if: matrix.os != 'windows'
+
       - name: Upload Artifacts
         uses: actions/upload-artifact@v7
         with:
